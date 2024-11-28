@@ -1,25 +1,119 @@
-import altair as alt
 import polars as pl
-from Tools import df
+import altair as alt
+import streamlit as st
+
+data_url = "https://www.dei.unipd.it/~ceccarello/data/gapminder.csv"
+
+gapminder = pl.read_csv(data_url).filter(pl.col("year")==2007)
 
 
-# Assicurati che la colonna "earnings" sia numerica
-df = df.with_columns(pl.col("earnings").cast(pl.Float64))
+#st.write(gapminder)
 
-# Aggregazione: calcolo della media dei guadagni per sesso
-gender_earnings = (
-    df.group_by("sex")
-    .agg(pl.col("earnings").mean().alias("average_earnings"))
-    .to_pandas()  # Altair richiede un DataFrame Pandas per il grafico
+chart = (
+    alt.Chart(gapminder)
+    .mark_circle()
+    .encode(
+        alt.X("gdpPercap").scale(type="log"),
+        alt.Y("lifeExp"),
+        alt.Color("continent"),
+        #alt.Size("pop")
+        alt.Tooltip(["country","pop"])
+    )
 )
 
-# Creazione del grafico
-chart = alt.Chart(gender_earnings).mark_bar().encode(
-    x=alt.X('sex', title='Sesso'),
-    y=alt.Y('average_earnings', title='Guadagno medio'),
-    color='sex'
-).properties(
-    title='Confronto del guadagno medio per sesso'
+st.altair_chart(chart,
+         use_container_width=True)
+
+barchart = (
+    alt.Chart(gapminder)
+    .mark_bar()
+    .encode(
+        alt.X("pop",aggregate="sum",title="Popolazione totale"),
+        alt.Y("continent",sort="-x",title="Continente")
+        
+    )
+)
+st.altair_chart(barchart,
+         use_container_width=True)
+
+
+gapminder = pl.read_csv(data_url)
+
+chart = (
+    alt.Chart(gapminder)
+    .mark_point()
+    .encode(
+        alt.X("year").scale(zero=False),
+        alt.Y("lifeExp")
+    )
 )
 
-chart.show()
+st.altair_chart(chart,
+         use_container_width=True)
+
+
+chart = (
+    alt.Chart(gapminder)
+    .mark_line()
+    .encode(
+        alt.X("year").scale(zero=False),
+        alt.Y("lifeExp")
+    )
+)
+
+st.altair_chart(chart,
+         use_container_width=True)
+
+
+chart = (
+    alt.Chart(gapminder)
+    .mark_line()
+    .encode(
+        alt.X("year").scale(zero=False),
+        alt.Y("lifeExp",aggregate="mean")
+    )
+)
+
+st.altair_chart(chart,
+         use_container_width=True)
+
+
+
+chart = (
+    alt.Chart(gapminder)
+    .mark_line()
+    .encode(
+        alt.X("year").scale(zero=False),
+        alt.Y("lifeExp",aggregate="mean"),
+        alt.Color("continent")
+    )
+)
+
+st.altair_chart(chart,
+         use_container_width=True)
+
+
+gapminder = pl.read_csv(data_url).filter(pl.col("year")==2007)
+
+chart = (
+    alt.Chart(gapminder)
+    .mark_arc()
+    .encode(
+        alt.Theta("pop", aggregate = "sum"),
+        alt.Color("continent")
+    )
+)
+st.altair_chart(chart,
+         use_container_width=True)
+
+
+chart = (
+    alt.Chart(gapminder)
+    .mark_arc(radius=75, radius2=100)
+    .encode(
+        alt.Theta("pop", aggregate = "sum"),
+        alt.Color("continent")
+    )
+)
+st.altair_chart(chart,
+         use_container_width=True)
