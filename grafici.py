@@ -2,12 +2,23 @@ import polars as pl
 import altair as alt
 import streamlit as st
 
-data_url = "https://www.dei.unipd.it/~ceccarello/data/gapminder.csv"
+data_name = "earnings-clean"
 
-gapminder = pl.read_csv(data_url).filter(pl.col("year")==2007)
+gapminder = pl.read_csv(data_name)
 
 
-#st.write(gapminder)
+st.write("Laboratorio 9")
+
+
+
+
+
+
+
+
+
+
+
 
 chart = (
     alt.Chart(gapminder)
