@@ -48,7 +48,7 @@ st.altair_chart(barchart,
          use_container_width=True)
 
 
-gapminder = pl.read_csv(data_url)
+gapminder = pl.read_csv(data_name)
 
 chart = (
     alt.Chart(gapminder)
@@ -104,7 +104,7 @@ st.altair_chart(chart,
          use_container_width=True)
 
 
-gapminder = pl.read_csv(data_url).filter(pl.col("year")==2007)
+gapminder = pl.read_csv(data_name).filter(pl.col("year")==2007)
 
 chart = (
     alt.Chart(gapminder)
